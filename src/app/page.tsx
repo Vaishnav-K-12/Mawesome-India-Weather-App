@@ -12,6 +12,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger, PopoverAnchor } from '@/components/ui/popover';
+import { format, addDays } from 'date-fns';
 
 type DisplayWeather = {
   city: string;
@@ -100,6 +101,7 @@ export default function Home() {
     
     if (selectedDayIndex !== null) {
       const forecastDay = cityData.forecast[selectedDayIndex];
+      const dayDate = addDays(new Date(), selectedDayIndex + 1);
       return {
         city: cityData.city,
         country: cityData.country,
@@ -108,7 +110,7 @@ export default function Home() {
         humidity: cityData.humidity, // Using parent humidity as placeholder
         windSpeed: cityData.windSpeed, // Using parent windSpeed as placeholder
         aqi: forecastDay.aqi,
-        day: forecastDay.day,
+        day: format(dayDate, 'EEE, MMM d'),
       };
     }
 
@@ -221,20 +223,23 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-3 gap-4 text-center">
-                        {cityData.forecast.map((day: DailyForecast, index: number) => (
-                            <div 
-                                key={index} 
-                                className={cn(
-                                  "flex flex-col items-center p-4 rounded-lg bg-background hover:bg-primary/5 transition-colors cursor-pointer",
-                                  selectedDayIndex === index && "bg-primary/10 ring-2 ring-accent"
-                                )}
-                                onClick={() => handleForecastClick(index)}
-                            >
-                                <p className="font-bold text-lg">{day.day}</p>
-                                <WeatherIcon condition={day.condition} className="w-12 h-12 my-2 text-accent" />
-                                <p className="font-semibold">{day.maxTemp}° / {day.minTemp}°</p>
-                            </div>
-                        ))}
+                        {cityData.forecast.map((day: DailyForecast, index: number) => {
+                            const forecastDate = addDays(new Date(), index + 1);
+                            return (
+                                <div 
+                                    key={index} 
+                                    className={cn(
+                                      "flex flex-col items-center p-4 rounded-lg bg-background hover:bg-primary/5 transition-colors cursor-pointer",
+                                      selectedDayIndex === index && "bg-primary/10 ring-2 ring-accent"
+                                    )}
+                                    onClick={() => handleForecastClick(index)}
+                                >
+                                    <p className="font-bold text-lg">{format(forecastDate, 'EEE, d')}</p>
+                                    <WeatherIcon condition={day.condition} className="w-12 h-12 my-2 text-accent" />
+                                    <p className="font-semibold">{day.maxTemp}° / {day.minTemp}°</p>
+                                </div>
+                            )
+                        })}
                     </div>
                 </CardContent>
             </Card>

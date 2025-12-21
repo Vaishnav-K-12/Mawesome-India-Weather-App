@@ -10,9 +10,9 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 10,
     aqi: 185,
     forecast: [
-      { day: 'Mon', condition: 'Sunny', maxTemp: 34, minTemp: 25, aqi: 190 },
-      { day: 'Tue', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 26, aqi: 175 },
-      { day: 'Wed', condition: 'Cloudy', maxTemp: 31, minTemp: 24, aqi: 160 },
+      { day: 'Tomorrow', condition: 'Sunny', maxTemp: 34, minTemp: 25, aqi: 190 },
+      { day: 'Day 2', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 26, aqi: 175 },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 31, minTemp: 24, aqi: 160 },
     ],
   },
   {
@@ -24,9 +24,9 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 25,
     aqi: 95,
     forecast: [
-      { day: 'Mon', condition: 'Rainy', maxTemp: 30, minTemp: 26, aqi: 100 },
-      { day: 'Tue', condition: 'Rainy', maxTemp: 29, minTemp: 25, aqi: 90 },
-      { day: 'Wed', condition: 'Cloudy', maxTemp: 30, minTemp: 26, aqi: 85 },
+      { day: 'Tomorrow', condition: 'Rainy', maxTemp: 30, minTemp: 26, aqi: 100 },
+      { day: 'Day 2', condition: 'Rainy', maxTemp: 29, minTemp: 25, aqi: 90 },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 30, minTemp: 26, aqi: 85 },
     ],
   },
   {
@@ -38,9 +38,9 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 15,
     aqi: 65,
     forecast: [
-      { day: 'Mon', condition: 'Partly Cloudy', maxTemp: 26, minTemp: 20, aqi: 70 },
-      { day: 'Tue', condition: 'Rainy', maxTemp: 24, minTemp: 20, aqi: 60 },
-      { day: 'Wed', condition: 'Cloudy', maxTemp: 25, minTemp: 21, aqi: 68 },
+      { day: 'Tomorrow', condition: 'Partly Cloudy', maxTemp: 26, minTemp: 20, aqi: 70 },
+      { day: 'Day 2', condition: 'Rainy', maxTemp: 24, minTemp: 20, aqi: 60 },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 25, minTemp: 21, aqi: 68 },
     ],
   },
   {
@@ -52,9 +52,9 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 18,
     aqi: 110,
     forecast: [
-      { day: 'Mon', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 27, aqi: 115 },
-      { day: 'Tue', condition: 'Sunny', maxTemp: 34, minTemp: 28, aqi: 120 },
-      { day: 'Wed', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 27, aqi: 105 },
+      { day: 'Tomorrow', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 27, aqi: 115 },
+      { day: 'Day 2', condition: 'Sunny', maxTemp: 34, minTemp: 28, aqi: 120 },
+      { day: 'Day 3', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 27, aqi: 105 },
     ],
   },
   {
@@ -66,9 +66,37 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 12,
     aqi: 130,
     forecast: [
-      { day: 'Mon', condition: 'Rainy', maxTemp: 31, minTemp: 26, aqi: 135 },
-      { day: 'Tue', condition: 'Cloudy', maxTemp: 30, minTemp: 25, aqi: 125 },
-      { day: 'Wed', condition: 'Rainy', maxTemp: 29, minTemp: 25, aqi: 120 },
+      { day: 'Tomorrow', condition: 'Rainy', maxTemp: 31, minTemp: 26, aqi: 135 },
+      { day: 'Day 2', condition: 'Cloudy', maxTemp: 30, minTemp: 25, aqi: 125 },
+      { day: 'Day 3', condition: 'Rainy', maxTemp: 29, minTemp: 25, aqi: 120 },
+    ],
+  },
+  {
+    city: 'Visakhapatnam',
+    country: 'India',
+    temperature: 30,
+    condition: 'Partly Cloudy',
+    humidity: 78,
+    windSpeed: 20,
+    aqi: 105,
+    forecast: [
+      { day: 'Tomorrow', condition: 'Partly Cloudy', maxTemp: 32, minTemp: 27, aqi: 110 },
+      { day: 'Day 2', condition: 'Rainy', maxTemp: 30, minTemp: 26, aqi: 95 },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 31, minTemp: 27, aqi: 100 },
+    ],
+  },
+  {
+    city: 'Thiruvananthapuram',
+    country: 'India',
+    temperature: 28,
+    condition: 'Rainy',
+    humidity: 85,
+    windSpeed: 18,
+    aqi: 75,
+    forecast: [
+      { day: 'Tomorrow', condition: 'Rainy', maxTemp: 29, minTemp: 24, aqi: 80 },
+      { day: 'Day 2', condition: 'Rainy', maxTemp: 28, minTemp: 24, aqi: 70 },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 29, minTemp: 25, aqi: 72 },
     ],
   },
 ];
