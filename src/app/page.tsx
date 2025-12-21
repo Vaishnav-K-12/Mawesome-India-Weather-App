@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Cloud, Droplets, Search, Sun, Wind, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +11,7 @@ import { WeatherIcon } from '@/components/weather/weather-icon';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger, PopoverAnchor } from '@/components/ui/popover';
 
 type DisplayWeather = {
   city: string;
@@ -38,6 +39,9 @@ export default function Home() {
     indianCitiesWeather.find(city => city.city.toLowerCase() === defaultCity.toLowerCase()) || null
   );
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { toast } = useToast();
 
@@ -50,6 +54,8 @@ export default function Home() {
     if (foundCity) {
       setCityData(foundCity);
       setSelectedDayIndex(null); // Reset to current day on new search
+      setSearchTerm(''); // Clear search term after selection
+      setIsPopoverOpen(false); // Close popover
     } else {
       toast({
         variant: "destructive",
@@ -66,6 +72,28 @@ export default function Home() {
   const handleCurrentWeatherClick = () => {
     setSelectedDayIndex(null);
   }
+
+  const handleCitySelect = (city: WeatherData) => {
+    setCityData(city);
+    setSelectedDayIndex(null);
+    setSearchTerm(''); // Clear search term after selection
+    setIsPopoverOpen(false); // Close popover
+  }
+
+  const filteredCities = useMemo(() => {
+    if (!searchTerm) return [];
+    return indianCitiesWeather.filter(city =>
+      city.city.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (searchTerm.length > 0 && filteredCities.length > 0) {
+      setIsPopoverOpen(true);
+    } else {
+      setIsPopoverOpen(false);
+    }
+  }, [searchTerm, filteredCities.length]);
 
   const displayWeather: DisplayWeather | null = useMemo(() => {
     if (!cityData) return null;
@@ -109,19 +137,43 @@ export default function Home() {
             </h1>
             <p className="text-muted-foreground mt-2">Your daily weather companion for India</p>
         </header>
-
-        <form onSubmit={handleSearch} className="flex w-full gap-2 mb-8">
-          <Input
-            type="text"
-            placeholder="Search for a city in India..."
-            className="flex-grow bg-card focus-visible:ring-accent"
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <Button type="submit" variant="default" size="icon" aria-label="Search">
-            <Search className="h-5 w-5" />
-          </Button>
-        </form>
+        
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <form onSubmit={handleSearch} className="flex w-full gap-2 mb-8">
+            <PopoverAnchor asChild>
+                <Input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Search for a city in India..."
+                    className="flex-grow bg-card focus-visible:ring-accent"
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    autoComplete="off"
+                />
+            </PopoverAnchor>
+            <Button type="submit" variant="default" size="icon" aria-label="Search">
+                <Search className="h-5 w-5" />
+            </Button>
+          </form>
+          <PopoverContent 
+            className="w-[--radix-popover-trigger-width] p-0" 
+            onOpenAutoFocus={(e) => e.preventDefault()}
+          >
+            {filteredCities.length > 0 ? (
+                <div className="flex flex-col">
+                {filteredCities.map(city => (
+                    <button
+                    key={city.city}
+                    onClick={() => handleCitySelect(city)}
+                    className="text-left p-2 hover:bg-accent/50"
+                    >
+                    {city.city}
+                    </button>
+                ))}
+                </div>
+            ) : null}
+          </PopoverContent>
+        </Popover>
 
         {cityData && displayWeather ? (
           <div className="space-y-8 animate-in fade-in-50 duration-500">
