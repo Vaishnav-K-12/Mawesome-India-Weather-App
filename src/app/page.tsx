@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Cloud, Droplets, Search, Sun, Wind, Leaf, Smile, Frown, Meh, AlertTriangle, CloudRain, Thermometer } from 'lucide-react';
+import { Cloud, Droplets, Search, Sun, Wind, Leaf, Smile, Frown, Meh, AlertTriangle, CloudRain, Thermometer, Pin, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -44,10 +44,31 @@ export default function Home() {
   );
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [favoriteCities, setFavoriteCities] = useState<string[]>([]);
   
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { toast } = useToast();
+  
+  useEffect(() => {
+    try {
+      const storedFavorites = localStorage.getItem('favoriteCities');
+      if (storedFavorites) {
+        setFavoriteCities(JSON.parse(storedFavorites));
+      }
+    } catch (error) {
+      console.error("Failed to parse favorite cities from localStorage", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('favoriteCities', JSON.stringify(favoriteCities));
+    } catch (error) {
+      console.error("Failed to save favorite cities to localStorage", error);
+    }
+  }, [favoriteCities]);
+
 
   useEffect(() => {
     const currentHour = new Date().getHours();
@@ -93,6 +114,30 @@ export default function Home() {
     setSearchTerm(''); // Clear search term after selection
     setIsPopoverOpen(false); // Close popover
   }
+  
+  const handleFavoriteCityClick = (cityName: string) => {
+    const foundCity = indianCitiesWeather.find(
+      city => city.city.toLowerCase() === cityName.toLowerCase()
+    );
+    if (foundCity) {
+      setCityData(foundCity);
+      setSelectedDayIndex(null);
+    }
+  }
+
+  const toggleFavorite = () => {
+    if (!cityData) return;
+    const cityName = cityData.city;
+    if (favoriteCities.includes(cityName)) {
+      setFavoriteCities(favoriteCities.filter(favCity => favCity !== cityName));
+      toast({ title: `${cityName} removed from favorites` });
+    } else {
+      setFavoriteCities([...favoriteCities, cityName]);
+      toast({ title: `${cityName} added to favorites` });
+    }
+  };
+  
+  const isCurrentCityFavorite = cityData ? favoriteCities.includes(cityData.city) : false;
 
   const filteredCities = useMemo(() => {
     if (!searchTerm) return [];
@@ -167,7 +212,7 @@ export default function Home() {
         </header>
         
         <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-          <form onSubmit={handleSearch} className="flex w-full gap-2 mb-8">
+          <form onSubmit={handleSearch} className="flex w-full gap-2 mb-4">
             <PopoverAnchor asChild>
                 <Input
                     ref={searchInputRef}
@@ -203,6 +248,23 @@ export default function Home() {
           </PopoverContent>
         </Popover>
 
+        {favoriteCities.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-8">
+            <h3 className="text-sm font-semibold text-muted-foreground w-full">Favorites:</h3>
+            {favoriteCities.map(favCity => (
+              <Button
+                key={favCity}
+                variant="outline"
+                size="sm"
+                onClick={() => handleFavoriteCityClick(favCity)}
+                className={cn(cityData?.city === favCity && "bg-primary/10 ring-2 ring-accent")}
+              >
+                {favCity}
+              </Button>
+            ))}
+          </div>
+        )}
+
         {cityData && displayWeather && aqiInfo ? (
           <div className="space-y-8 animate-in fade-in-50 duration-500">
             {/* Current Weather */}
@@ -214,7 +276,13 @@ export default function Home() {
                     <div>
                       <p className="text-5xl font-bold">{displayWeather.temperature}°C</p>
                       <p className="text-lg text-muted-foreground">{displayWeather.condition}</p>
-                      <p className="text-xl font-medium">{displayWeather.city}, {displayWeather.country} ({displayWeather.day})</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xl font-medium">{displayWeather.city}, {displayWeather.country} ({displayWeather.day})</p>
+                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); toggleFavorite(); }} className="h-8 w-8 -mr-2">
+                          <Star className={cn("w-5 h-5", isCurrentCityFavorite ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground")} />
+                          <span className="sr-only">Toggle Favorite</span>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-center sm:text-left">
