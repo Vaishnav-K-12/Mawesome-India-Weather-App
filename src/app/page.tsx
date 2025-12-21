@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Cloud, Droplets, Search, Sun, Wind, Leaf } from 'lucide-react';
+import { Cloud, Droplets, Search, Sun, Wind, Leaf, Smile, Frown, Meh, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -25,13 +25,13 @@ type DisplayWeather = {
   day: string;
 };
 
-const getAqiColor = (aqi: number) => {
-  if (aqi <= 50) return 'text-green-500';
-  if (aqi <= 100) return 'text-yellow-500';
-  if (aqi <= 150) return 'text-orange-500';
-  if (aqi <= 200) return 'text-red-500';
-  if (aqi <= 300) return 'text-purple-500';
-  return 'text-rose-700';
+const getAqiInfo = (aqi: number) => {
+  if (aqi <= 50) return { color: 'text-green-500', advice: 'Good', Icon: Smile };
+  if (aqi <= 100) return { color: 'text-yellow-500', advice: 'Moderate', Icon: Meh };
+  if (aqi <= 150) return { color: 'text-orange-500', advice: 'Unhealthy for Sensitive Groups', Icon: Frown };
+  if (aqi <= 200) return { color: 'text-red-500', advice: 'Unhealthy', Icon: Frown };
+  if (aqi <= 300) return { color: 'text-purple-500', advice: 'Very Unhealthy', Icon: AlertTriangle };
+  return { color: 'text-rose-700', advice: 'Hazardous', Icon: AlertTriangle };
 };
 
 export default function Home() {
@@ -126,7 +126,7 @@ export default function Home() {
     };
   }, [cityData, selectedDayIndex]);
 
-  const aqiColor = displayWeather ? getAqiColor(displayWeather.aqi) : '';
+  const aqiInfo = displayWeather ? getAqiInfo(displayWeather.aqi) : null;
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-background text-foreground font-body p-4 sm:p-6 lg:p-8">
@@ -177,7 +177,7 @@ export default function Home() {
           </PopoverContent>
         </Popover>
 
-        {cityData && displayWeather ? (
+        {cityData && displayWeather && aqiInfo ? (
           <div className="space-y-8 animate-in fade-in-50 duration-500">
             {/* Current Weather */}
             <Card className="overflow-hidden shadow-lg cursor-pointer hover:bg-primary/5 transition-colors" onClick={handleCurrentWeatherClick}>
@@ -206,10 +206,10 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Leaf className={cn("w-6 h-6", aqiColor)} />
+                    <aqiInfo.Icon className={cn("w-6 h-6", aqiInfo.color)} />
                     <div>
-                      <p className={cn("font-bold", aqiColor)}>{displayWeather.aqi}</p>
-                      <p className="text-sm text-muted-foreground">AQI</p>
+                      <p className={cn("font-bold", aqiInfo.color)}>{displayWeather.aqi}</p>
+                      <p className="text-sm text-muted-foreground">AQI ({aqiInfo.advice})</p>
                     </div>
                   </div>
                 </div>
