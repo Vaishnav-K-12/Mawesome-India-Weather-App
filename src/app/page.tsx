@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Cloud, Droplets, Search, Sun, Wind } from 'lucide-react';
+import { Cloud, Droplets, Search, Sun, Wind, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,7 +19,17 @@ type DisplayWeather = {
   condition: WeatherCondition;
   humidity: number;
   windSpeed: number;
+  aqi: number;
   day: string;
+};
+
+const getAqiColor = (aqi: number) => {
+  if (aqi <= 50) return 'text-green-500';
+  if (aqi <= 100) return 'text-yellow-500';
+  if (aqi <= 150) return 'text-orange-500';
+  if (aqi <= 200) return 'text-red-500';
+  if (aqi <= 300) return 'text-purple-500';
+  return 'text-rose-700';
 };
 
 export default function Home() {
@@ -69,6 +79,7 @@ export default function Home() {
         condition: forecastDay.condition,
         humidity: cityData.humidity, // Using parent humidity as placeholder
         windSpeed: cityData.windSpeed, // Using parent windSpeed as placeholder
+        aqi: forecastDay.aqi,
         day: forecastDay.day,
       };
     }
@@ -80,13 +91,16 @@ export default function Home() {
       condition: cityData.condition,
       humidity: cityData.humidity,
       windSpeed: cityData.windSpeed,
+      aqi: cityData.aqi,
       day: 'Today',
     };
   }, [cityData, selectedDayIndex]);
 
+  const aqiColor = displayWeather ? getAqiColor(displayWeather.aqi) : '';
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-background text-foreground font-body p-4 sm:p-6 lg:p-8">
-      <main className="w-full max-w-2xl mx-auto">
+      <main className="w-full max-w-3xl mx-auto">
         <header className="flex flex-col items-center mb-8 text-center">
             <h1 className="text-4xl sm:text-5xl font-bold font-headline text-primary flex items-center gap-2">
                 <Sun className="w-10 h-10 text-accent" />
@@ -122,7 +136,7 @@ export default function Home() {
                     <p className="text-lg font-medium">{displayWeather.city}, {displayWeather.country} ({displayWeather.day})</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 text-center sm:text-left">
+                <div className="grid grid-cols-3 gap-x-4 gap-y-2 text-center sm:text-left">
                   <div className="flex items-center gap-2">
                     <Droplets className="w-6 h-6 text-primary" />
                     <div>
@@ -135,6 +149,13 @@ export default function Home() {
                     <div>
                       <p className="font-bold">{displayWeather.windSpeed} km/h</p>
                       <p className="text-sm text-muted-foreground">Wind</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Leaf className={cn("w-6 h-6", aqiColor)} />
+                    <div>
+                      <p className={cn("font-bold", aqiColor)}>{displayWeather.aqi}</p>
+                      <p className="text-sm text-muted-foreground">AQI</p>
                     </div>
                   </div>
                 </div>

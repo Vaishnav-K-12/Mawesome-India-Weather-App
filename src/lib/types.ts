@@ -3,6 +3,7 @@ export type DailyForecast = {
   condition: WeatherCondition;
   maxTemp: number;
   minTemp: number;
+  aqi: number;
 };
 
 export type WeatherData = {
@@ -12,6 +13,7 @@ export type WeatherData = {
   condition: WeatherCondition;
   humidity: number;
   windSpeed: number;
+  aqi: number;
   forecast: DailyForecast[];
 };
 
