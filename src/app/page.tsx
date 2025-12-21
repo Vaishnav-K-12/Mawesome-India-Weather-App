@@ -46,6 +46,16 @@ export default function Home() {
 
   const { toast } = useToast();
 
+  useEffect(() => {
+    const currentHour = new Date().getHours();
+    // Night time between 6 PM (18) and 6 AM (6)
+    if (currentHour >= 18 || currentHour < 6) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!searchTerm) return;
