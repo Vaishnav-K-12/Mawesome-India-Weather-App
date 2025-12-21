@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Cloud, Droplets, Search, Sun, Wind, Leaf, Smile, Frown, Meh, AlertTriangle, CloudRain } from 'lucide-react';
+import { Cloud, Droplets, Search, Sun, Wind, Leaf, Smile, Frown, Meh, AlertTriangle, CloudRain, Thermometer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,6 +19,7 @@ type DisplayWeather = {
   city: string;
   country: string;
   temperature: number;
+  feelsLike: number;
   condition: WeatherCondition;
   humidity: number;
   windSpeed: number;
@@ -118,6 +119,7 @@ export default function Home() {
         city: cityData.city,
         country: cityData.country,
         temperature: Math.round((forecastDay.maxTemp + forecastDay.minTemp) / 2),
+        feelsLike: forecastDay.feelsLike,
         condition: forecastDay.condition,
         humidity: cityData.humidity, // Using parent humidity as placeholder
         windSpeed: cityData.windSpeed, // Using parent windSpeed as placeholder
@@ -131,6 +133,7 @@ export default function Home() {
       city: cityData.city,
       country: cityData.country,
       temperature: cityData.temperature,
+      feelsLike: cityData.feelsLike,
       condition: cityData.condition,
       humidity: cityData.humidity,
       windSpeed: cityData.windSpeed,
@@ -141,6 +144,15 @@ export default function Home() {
   }, [cityData, selectedDayIndex]);
 
   const aqiInfo = displayWeather ? getAqiInfo(displayWeather.aqi) : null;
+  
+  const getFeelsLikePhrase = (temp: number, feelsLike: number) => {
+    const diff = feelsLike - temp;
+    if (diff > 2) return "Feels much hotter";
+    if (diff > 0) return "Feels hotter";
+    if (diff < -2) return "Feels much cooler";
+    if (diff < 0) return "Feels cooler";
+    return "Similar to actual temp";
+  };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-background text-foreground font-body p-4 sm:p-6 lg:p-8">
@@ -201,11 +213,18 @@ export default function Home() {
                     <WeatherIcon condition={displayWeather.condition} className="w-20 h-20 text-accent" />
                     <div>
                       <p className="text-5xl font-bold">{displayWeather.temperature}°C</p>
-                      <p className="text-xl text-muted-foreground">{displayWeather.condition}</p>
-                      <p className="text-lg font-medium">{displayWeather.city}, {displayWeather.country} ({displayWeather.day})</p>
+                      <p className="text-lg text-muted-foreground">{displayWeather.condition}</p>
+                      <p className="text-xl font-medium">{displayWeather.city}, {displayWeather.country} ({displayWeather.day})</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-x-4 gap-y-2 text-center sm:text-left">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-center sm:text-left">
+                    <div className="flex items-center gap-2">
+                        <Thermometer className="w-6 h-6 text-primary" />
+                        <div>
+                            <p className="font-bold">{displayWeather.feelsLike}°C</p>
+                            <p className="text-sm text-muted-foreground">Feels Like</p>
+                        </div>
+                    </div>
                     <div className="flex items-center gap-2">
                       <Droplets className="w-6 h-6 text-primary" />
                       <div>
@@ -220,7 +239,7 @@ export default function Home() {
                         <p className="text-sm text-muted-foreground">Wind</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
                       <aqiInfo.Icon className={cn("w-6 h-6", aqiInfo.color)} />
                       <div>
                         <p className={cn("font-bold", aqiInfo.color)}>{displayWeather.aqi}</p>
@@ -230,6 +249,11 @@ export default function Home() {
                   </div>
                 </CardContent>
               </div>
+               {displayWeather.feelsLike !== displayWeather.temperature &&
+                  <div className="px-6 py-2 bg-primary/10 border-t border-border text-sm text-center text-muted-foreground">
+                    {getFeelsLikePhrase(displayWeather.temperature, displayWeather.feelsLike)}
+                  </div>
+                }
               {displayWeather.rainAlert && (
                 <Alert variant="destructive" className="border-t-0 rounded-t-none">
                   <CloudRain className="h-4 w-4" />

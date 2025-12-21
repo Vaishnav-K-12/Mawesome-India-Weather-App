@@ -3,6 +3,7 @@ export type DailyForecast = {
   condition: WeatherCondition;
   maxTemp: number;
   minTemp: number;
+  feelsLike: number;
   aqi: number;
   rainAlert?: string;
 };
@@ -11,6 +12,7 @@ export type WeatherData = {
   city: string;
   country: string;
   temperature: number;
+  feelsLike: number;
   condition: WeatherCondition;
   humidity: number;
   windSpeed: number;
