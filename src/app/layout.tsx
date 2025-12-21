@@ -2,7 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Mausam India',
+  title: 'Mawesome',
   description: 'A focused weather app for India that allows users to check current weather conditions for various Indian cities.',
 };
 

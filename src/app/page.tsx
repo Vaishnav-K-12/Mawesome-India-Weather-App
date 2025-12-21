@@ -1,22 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Cloud, Droplets, Search, Sun, Wind } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { indianCitiesWeather, defaultCity } from '@/lib/weather-data';
-import type { WeatherData, DailyForecast } from '@/lib/types';
+import type { WeatherData, DailyForecast, WeatherCondition } from '@/lib/types';
 import { WeatherIcon } from '@/components/weather/weather-icon';
-import { AIAssistant } from '@/components/weather/ai-assistant';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+
+type DisplayWeather = {
+  city: string;
+  country: string;
+  temperature: number;
+  condition: WeatherCondition;
+  humidity: number;
+  windSpeed: number;
+  day: string;
+};
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(
+  const [cityData, setCityData] = useState<WeatherData | null>(
     indianCitiesWeather.find(city => city.city.toLowerCase() === defaultCity.toLowerCase()) || null
   );
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
 
   const { toast } = useToast();
 
@@ -27,7 +38,8 @@ export default function Home() {
       city => city.city.toLowerCase() === searchTerm.toLowerCase()
     );
     if (foundCity) {
-      setWeatherData(foundCity);
+      setCityData(foundCity);
+      setSelectedDayIndex(null); // Reset to current day on new search
     } else {
       toast({
         variant: "destructive",
@@ -37,13 +49,48 @@ export default function Home() {
     }
   };
 
+  const handleForecastClick = (index: number) => {
+    setSelectedDayIndex(index);
+  };
+  
+  const handleCurrentWeatherClick = () => {
+    setSelectedDayIndex(null);
+  }
+
+  const displayWeather: DisplayWeather | null = useMemo(() => {
+    if (!cityData) return null;
+    
+    if (selectedDayIndex !== null) {
+      const forecastDay = cityData.forecast[selectedDayIndex];
+      return {
+        city: cityData.city,
+        country: cityData.country,
+        temperature: Math.round((forecastDay.maxTemp + forecastDay.minTemp) / 2),
+        condition: forecastDay.condition,
+        humidity: cityData.humidity, // Using parent humidity as placeholder
+        windSpeed: cityData.windSpeed, // Using parent windSpeed as placeholder
+        day: forecastDay.day,
+      };
+    }
+
+    return {
+      city: cityData.city,
+      country: cityData.country,
+      temperature: cityData.temperature,
+      condition: cityData.condition,
+      humidity: cityData.humidity,
+      windSpeed: cityData.windSpeed,
+      day: 'Today',
+    };
+  }, [cityData, selectedDayIndex]);
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-background text-foreground font-body p-4 sm:p-6 lg:p-8">
       <main className="w-full max-w-2xl mx-auto">
         <header className="flex flex-col items-center mb-8 text-center">
             <h1 className="text-4xl sm:text-5xl font-bold font-headline text-primary flex items-center gap-2">
                 <Sun className="w-10 h-10 text-accent" />
-                Mausam India
+                Mawesome
                 <Cloud className="w-10 h-10 text-primary" />
             </h1>
             <p className="text-muted-foreground mt-2">Your daily weather companion for India</p>
@@ -62,31 +109,31 @@ export default function Home() {
           </Button>
         </form>
 
-        {weatherData ? (
+        {cityData && displayWeather ? (
           <div className="space-y-8 animate-in fade-in-50 duration-500">
             {/* Current Weather */}
-            <Card className="overflow-hidden shadow-lg">
+            <Card className="overflow-hidden shadow-lg cursor-pointer hover:bg-primary/5 transition-colors" onClick={handleCurrentWeatherClick}>
               <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-6 bg-primary/10">
                 <div className="flex items-center gap-4">
-                  <WeatherIcon condition={weatherData.condition} className="w-20 h-20 text-accent" />
+                  <WeatherIcon condition={displayWeather.condition} className="w-20 h-20 text-accent" />
                   <div>
-                    <p className="text-5xl font-bold">{weatherData.temperature}°C</p>
-                    <p className="text-xl text-muted-foreground">{weatherData.condition}</p>
-                    <p className="text-lg font-medium">{weatherData.city}, {weatherData.country}</p>
+                    <p className="text-5xl font-bold">{displayWeather.temperature}°C</p>
+                    <p className="text-xl text-muted-foreground">{displayWeather.condition}</p>
+                    <p className="text-lg font-medium">{displayWeather.city}, {displayWeather.country} ({displayWeather.day})</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-center sm:text-left">
                   <div className="flex items-center gap-2">
                     <Droplets className="w-6 h-6 text-primary" />
                     <div>
-                      <p className="font-bold">{weatherData.humidity}%</p>
+                      <p className="font-bold">{displayWeather.humidity}%</p>
                       <p className="text-sm text-muted-foreground">Humidity</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Wind className="w-6 h-6 text-primary" />
                     <div>
-                      <p className="font-bold">{weatherData.windSpeed} km/h</p>
+                      <p className="font-bold">{displayWeather.windSpeed} km/h</p>
                       <p className="text-sm text-muted-foreground">Wind</p>
                     </div>
                   </div>
@@ -101,8 +148,15 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-3 gap-4 text-center">
-                        {weatherData.forecast.map((day: DailyForecast, index: number) => (
-                            <div key={index} className="flex flex-col items-center p-4 rounded-lg bg-background hover:bg-primary/5 transition-colors">
+                        {cityData.forecast.map((day: DailyForecast, index: number) => (
+                            <div 
+                                key={index} 
+                                className={cn(
+                                  "flex flex-col items-center p-4 rounded-lg bg-background hover:bg-primary/5 transition-colors cursor-pointer",
+                                  selectedDayIndex === index && "bg-primary/10 ring-2 ring-accent"
+                                )}
+                                onClick={() => handleForecastClick(index)}
+                            >
                                 <p className="font-bold text-lg">{day.day}</p>
                                 <WeatherIcon condition={day.condition} className="w-12 h-12 my-2 text-accent" />
                                 <p className="font-semibold">{day.maxTemp}° / {day.minTemp}°</p>
@@ -111,9 +165,6 @@ export default function Home() {
                     </div>
                 </CardContent>
             </Card>
-
-            {/* AI Weather Assistant */}
-            <AIAssistant weatherData={weatherData} />
 
           </div>
         ) : (
