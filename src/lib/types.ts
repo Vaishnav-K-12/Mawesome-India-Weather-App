@@ -4,6 +4,7 @@ export type DailyForecast = {
   maxTemp: number;
   minTemp: number;
   aqi: number;
+  rainAlert?: string;
 };
 
 export type WeatherData = {
@@ -14,6 +15,7 @@ export type WeatherData = {
   humidity: number;
   windSpeed: number;
   aqi: number;
+  rainAlert?: string;
   forecast: DailyForecast[];
 };
 

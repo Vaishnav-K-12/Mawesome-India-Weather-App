@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Cloud, Droplets, Search, Sun, Wind, Leaf, Smile, Frown, Meh, AlertTriangle } from 'lucide-react';
+import { Cloud, Droplets, Search, Sun, Wind, Leaf, Smile, Frown, Meh, AlertTriangle, CloudRain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger, PopoverAnchor } from '@/components/ui/popover';
 import { format, addDays } from 'date-fns';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 type DisplayWeather = {
   city: string;
@@ -23,6 +24,7 @@ type DisplayWeather = {
   windSpeed: number;
   aqi: number;
   day: string;
+  rainAlert?: string;
 };
 
 const getAqiInfo = (aqi: number) => {
@@ -121,6 +123,7 @@ export default function Home() {
         windSpeed: cityData.windSpeed, // Using parent windSpeed as placeholder
         aqi: forecastDay.aqi,
         day: format(dayDate, 'EEE, MMM d'),
+        rainAlert: forecastDay.rainAlert,
       };
     }
 
@@ -133,6 +136,7 @@ export default function Home() {
       windSpeed: cityData.windSpeed,
       aqi: cityData.aqi,
       day: 'Today',
+      rainAlert: cityData.rainAlert,
     };
   }, [cityData, selectedDayIndex]);
 
@@ -190,40 +194,51 @@ export default function Home() {
         {cityData && displayWeather && aqiInfo ? (
           <div className="space-y-8 animate-in fade-in-50 duration-500">
             {/* Current Weather */}
-            <Card className="overflow-hidden shadow-lg cursor-pointer hover:bg-primary/5 transition-colors" onClick={handleCurrentWeatherClick}>
-              <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-6 bg-primary/10">
-                <div className="flex items-center gap-4">
-                  <WeatherIcon condition={displayWeather.condition} className="w-20 h-20 text-accent" />
-                  <div>
-                    <p className="text-5xl font-bold">{displayWeather.temperature}°C</p>
-                    <p className="text-xl text-muted-foreground">{displayWeather.condition}</p>
-                    <p className="text-lg font-medium">{displayWeather.city}, {displayWeather.country} ({displayWeather.day})</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-x-4 gap-y-2 text-center sm:text-left">
-                  <div className="flex items-center gap-2">
-                    <Droplets className="w-6 h-6 text-primary" />
+            <Card className="overflow-hidden shadow-lg">
+              <div className={cn("cursor-pointer hover:bg-primary/5 transition-colors")} onClick={handleCurrentWeatherClick}>
+                <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-6 bg-primary/10">
+                  <div className="flex items-center gap-4">
+                    <WeatherIcon condition={displayWeather.condition} className="w-20 h-20 text-accent" />
                     <div>
-                      <p className="font-bold">{displayWeather.humidity}%</p>
-                      <p className="text-sm text-muted-foreground">Humidity</p>
+                      <p className="text-5xl font-bold">{displayWeather.temperature}°C</p>
+                      <p className="text-xl text-muted-foreground">{displayWeather.condition}</p>
+                      <p className="text-lg font-medium">{displayWeather.city}, {displayWeather.country} ({displayWeather.day})</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Wind className="w-6 h-6 text-primary" />
-                    <div>
-                      <p className="font-bold">{displayWeather.windSpeed} km/h</p>
-                      <p className="text-sm text-muted-foreground">Wind</p>
+                  <div className="grid grid-cols-3 gap-x-4 gap-y-2 text-center sm:text-left">
+                    <div className="flex items-center gap-2">
+                      <Droplets className="w-6 h-6 text-primary" />
+                      <div>
+                        <p className="font-bold">{displayWeather.humidity}%</p>
+                        <p className="text-sm text-muted-foreground">Humidity</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Wind className="w-6 h-6 text-primary" />
+                      <div>
+                        <p className="font-bold">{displayWeather.windSpeed} km/h</p>
+                        <p className="text-sm text-muted-foreground">Wind</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <aqiInfo.Icon className={cn("w-6 h-6", aqiInfo.color)} />
+                      <div>
+                        <p className={cn("font-bold", aqiInfo.color)}>{displayWeather.aqi}</p>
+                        <p className="text-sm text-muted-foreground">AQI ({aqiInfo.advice})</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <aqiInfo.Icon className={cn("w-6 h-6", aqiInfo.color)} />
-                    <div>
-                      <p className={cn("font-bold", aqiInfo.color)}>{displayWeather.aqi}</p>
-                      <p className="text-sm text-muted-foreground">AQI ({aqiInfo.advice})</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
+                </CardContent>
+              </div>
+              {displayWeather.rainAlert && (
+                <Alert variant="destructive" className="border-t-0 rounded-t-none">
+                  <CloudRain className="h-4 w-4" />
+                  <AlertTitle>Rain Alert</AlertTitle>
+                  <AlertDescription>
+                    {displayWeather.rainAlert}
+                  </AlertDescription>
+                </Alert>
+              )}
             </Card>
             
             {/* 3-Day Forecast */}
