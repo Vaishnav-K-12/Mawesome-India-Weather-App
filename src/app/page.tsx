@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { indianCitiesWeather, defaultCity } from '@/lib/weather-data';
 import type { WeatherData, DailyForecast, WeatherCondition } from '@/lib/types';
 import { WeatherIcon } from '@/components/weather/weather-icon';
+import { WeatherCharts } from '@/components/weather/weather-charts';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -360,6 +361,9 @@ export default function Home() {
                     </div>
                 </CardContent>
             </Card>
+            
+            {/* Weather Charts */}
+            <WeatherCharts cityData={cityData} />
 
           </div>
         ) : (

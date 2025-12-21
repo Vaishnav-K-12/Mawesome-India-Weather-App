@@ -5,6 +5,7 @@ export type DailyForecast = {
   minTemp: number;
   feelsLike: number;
   aqi: number;
+  precipitation: number; // Chance of rain in %
   rainAlert?: string;
 };
 

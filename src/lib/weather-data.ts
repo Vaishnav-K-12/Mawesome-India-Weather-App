@@ -11,9 +11,9 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 10,
     aqi: 185,
     forecast: [
-      { day: 'Tomorrow', condition: 'Sunny', maxTemp: 34, minTemp: 25, feelsLike: 38, aqi: 190 },
-      { day: 'Day 2', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 26, feelsLike: 37, aqi: 175 },
-      { day: 'Day 3', condition: 'Cloudy', maxTemp: 31, minTemp: 24, feelsLike: 34, aqi: 160 },
+      { day: 'Tomorrow', condition: 'Sunny', maxTemp: 34, minTemp: 25, feelsLike: 38, aqi: 190, precipitation: 5 },
+      { day: 'Day 2', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 26, feelsLike: 37, aqi: 175, precipitation: 10 },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 31, minTemp: 24, feelsLike: 34, aqi: 160, precipitation: 20 },
     ],
   },
   {
@@ -27,9 +27,9 @@ export const indianCitiesWeather: WeatherData[] = [
     aqi: 95,
     rainAlert: "Heavy rain expected in next 3 hours.",
     forecast: [
-      { day: 'Tomorrow', condition: 'Rainy', maxTemp: 30, minTemp: 26, feelsLike: 35, aqi: 100, rainAlert: "Thunderstorms expected in the afternoon." },
-      { day: 'Day 2', condition: 'Rainy', maxTemp: 29, minTemp: 25, feelsLike: 34, aqi: 90, rainAlert: "Continuous drizzle throughout the day." },
-      { day: 'Day 3', condition: 'Cloudy', maxTemp: 30, minTemp: 26, feelsLike: 35, aqi: 85 },
+      { day: 'Tomorrow', condition: 'Rainy', maxTemp: 30, minTemp: 26, feelsLike: 35, aqi: 100, precipitation: 90, rainAlert: "Thunderstorms expected in the afternoon." },
+      { day: 'Day 2', condition: 'Rainy', maxTemp: 29, minTemp: 25, feelsLike: 34, aqi: 90, precipitation: 85, rainAlert: "Continuous drizzle throughout the day." },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 30, minTemp: 26, feelsLike: 35, aqi: 85, precipitation: 40 },
     ],
   },
   {
@@ -42,9 +42,9 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 15,
     aqi: 65,
     forecast: [
-      { day: 'Tomorrow', condition: 'Partly Cloudy', maxTemp: 26, minTemp: 20, feelsLike: 28, aqi: 70 },
-      { day: 'Day 2', condition: 'Rainy', maxTemp: 24, minTemp: 20, feelsLike: 25, aqi: 60, rainAlert: "Light showers in the evening." },
-      { day: 'Day 3', condition: 'Cloudy', maxTemp: 25, minTemp: 21, feelsLike: 27, aqi: 68 },
+      { day: 'Tomorrow', condition: 'Partly Cloudy', maxTemp: 26, minTemp: 20, feelsLike: 28, aqi: 70, precipitation: 20 },
+      { day: 'Day 2', condition: 'Rainy', maxTemp: 24, minTemp: 20, feelsLike: 25, aqi: 60, precipitation: 60, rainAlert: "Light showers in the evening." },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 25, minTemp: 21, feelsLike: 27, aqi: 68, precipitation: 30 },
     ],
   },
   {
@@ -57,9 +57,9 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 18,
     aqi: 110,
     forecast: [
-      { day: 'Tomorrow', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 27, feelsLike: 39, aqi: 115 },
-      { day: 'Day 2', condition: 'Sunny', maxTemp: 34, minTemp: 28, feelsLike: 40, aqi: 120 },
-      { day: 'Day 3', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 27, feelsLike: 39, aqi: 105 },
+      { day: 'Tomorrow', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 27, feelsLike: 39, aqi: 115, precipitation: 15 },
+      { day: 'Day 2', condition: 'Sunny', maxTemp: 34, minTemp: 28, feelsLike: 40, aqi: 120, precipitation: 5 },
+      { day: 'Day 3', condition: 'Partly Cloudy', maxTemp: 33, minTemp: 27, feelsLike: 39, aqi: 105, precipitation: 20 },
     ],
   },
   {
@@ -72,9 +72,9 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 12,
     aqi: 130,
     forecast: [
-      { day: 'Tomorrow', condition: 'Rainy', maxTemp: 31, minTemp: 26, feelsLike: 37, aqi: 135, rainAlert: "Heavy rain and strong winds warning." },
-      { day: 'Day 2', condition: 'Cloudy', maxTemp: 30, minTemp: 25, feelsLike: 36, aqi: 125 },
-      { day: 'Day 3', condition: 'Rainy', maxTemp: 29, minTemp: 25, feelsLike: 35, aqi: 120, rainAlert: "Chance of afternoon thunderstorms." },
+      { day: 'Tomorrow', condition: 'Rainy', maxTemp: 31, minTemp: 26, feelsLike: 37, aqi: 135, precipitation: 80, rainAlert: "Heavy rain and strong winds warning." },
+      { day: 'Day 2', condition: 'Cloudy', maxTemp: 30, minTemp: 25, feelsLike: 36, aqi: 125, precipitation: 45 },
+      { day: 'Day 3', condition: 'Rainy', maxTemp: 29, minTemp: 25, feelsLike: 35, aqi: 120, precipitation: 70, rainAlert: "Chance of afternoon thunderstorms." },
     ],
   },
   {
@@ -87,9 +87,9 @@ export const indianCitiesWeather: WeatherData[] = [
     windSpeed: 20,
     aqi: 105,
     forecast: [
-      { day: 'Tomorrow', condition: 'Partly Cloudy', maxTemp: 32, minTemp: 27, feelsLike: 37, aqi: 110 },
-      { day: 'Day 2', condition: 'Rainy', maxTemp: 30, minTemp: 26, feelsLike: 35, aqi: 95, rainAlert: "Scattered showers expected." },
-      { day: 'Day 3', condition: 'Cloudy', maxTemp: 31, minTemp: 27, feelsLike: 36, aqi: 100 },
+      { day: 'Tomorrow', condition: 'Partly Cloudy', maxTemp: 32, minTemp: 27, feelsLike: 37, aqi: 110, precipitation: 25 },
+      { day: 'Day 2', condition: 'Rainy', maxTemp: 30, minTemp: 26, feelsLike: 35, aqi: 95, precipitation: 55, rainAlert: "Scattered showers expected." },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 31, minTemp: 27, feelsLike: 36, aqi: 100, precipitation: 30 },
     ],
   },
   {
@@ -103,9 +103,9 @@ export const indianCitiesWeather: WeatherData[] = [
     aqi: 75,
     rainAlert: "Ongoing light rain.",
     forecast: [
-      { day: 'Tomorrow', condition: 'Rainy', maxTemp: 29, minTemp: 24, feelsLike: 33, aqi: 80, rainAlert: "Heavy rainfall warning for tomorrow." },
-      { day: 'Day 2', condition: 'Rainy', maxTemp: 28, minTemp: 24, feelsLike: 32, aqi: 70, rainAlert: "Expect intermittent rain." },
-      { day: 'Day 3', condition: 'Cloudy', maxTemp: 29, minTemp: 25, feelsLike: 33, aqi: 72 },
+      { day: 'Tomorrow', condition: 'Rainy', maxTemp: 29, minTemp: 24, feelsLike: 33, aqi: 80, precipitation: 95, rainAlert: "Heavy rainfall warning for tomorrow." },
+      { day: 'Day 2', condition: 'Rainy', maxTemp: 28, minTemp: 24, feelsLike: 32, aqi: 70, precipitation: 85, rainAlert: "Expect intermittent rain." },
+      { day: 'Day 3', condition: 'Cloudy', maxTemp: 29, minTemp: 25, feelsLike: 33, aqi: 72, precipitation: 40 },
     ],
   },
 ];
